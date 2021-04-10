@@ -1,9 +1,9 @@
-use actix_web::{Error, get, HttpResponse, web};
+use actix_web::{get, web, Error, HttpResponse};
 use diesel::prelude::*;
 use uuid::Uuid;
 
-use crate::models;
 use crate::db;
+use crate::models;
 
 #[get("/user/{user_id}")]
 pub async fn get_user(user_uid: web::Path<Uuid>) -> Result<HttpResponse, Error> {
@@ -20,14 +20,12 @@ pub async fn get_user(user_uid: web::Path<Uuid>) -> Result<HttpResponse, Error> 
     if let Some(user) = user {
         Ok(HttpResponse::Ok().json(user))
     } else {
-        let res = HttpResponse::NotFound()
-            .body(format!("No user found with uid: {}", user_uid));
+        let res = HttpResponse::NotFound().body(format!("No user found with uid: {}", user_uid));
         Ok(res)
     }
 }
 
-fn find_user_by_uid<'a>(uid: Uuid,
-) -> Result<Option<models::User>, diesel::result::Error> {
+fn find_user_by_uid<'a>(uid: Uuid) -> Result<Option<models::User>, diesel::result::Error> {
     use crate::schema::users::dsl::*;
 
     let conn = db::POOL.clone().get().expect("can't ge db conn from pool");

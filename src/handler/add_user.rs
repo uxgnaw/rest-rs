@@ -1,4 +1,4 @@
-use actix_web::{Error, get, HttpResponse, web};
+use actix_web::{get, web, Error, HttpResponse};
 use diesel::prelude::*;
 use uuid::Uuid;
 
@@ -6,10 +6,7 @@ use crate::db;
 use crate::models;
 
 #[get("/add/user/{name}")]
-pub async fn add_user(
-    name: web::Path<String>,
-) -> Result<HttpResponse, Error> {
-
+pub async fn add_user(name: web::Path<String>) -> Result<HttpResponse, Error> {
     // use web::block to offload blocking Diesel code without blocking server thread
     let user = web::block(move || insert_new_user(&name))
         .await
@@ -30,14 +27,18 @@ fn insert_new_user(
     // to prevent import collisions and namespace pollution.
     use crate::schema::users::dsl::*;
 
-    let conn = db::POOL.clone().get().expect("couldn't get db connection from pool");
+    let conn = db::POOL
+        .clone()
+        .get()
+        .expect("couldn't get db connection from pool");
     let new_user = models::User {
         id: Uuid::new_v4().to_string(),
         name: nm.to_owned(),
     };
 
-    diesel::insert_into(users).values(&new_user).execute(&conn)?;
+    diesel::insert_into(users)
+        .values(&new_user)
+        .execute(&conn)?;
 
     Ok(new_user)
 }
-

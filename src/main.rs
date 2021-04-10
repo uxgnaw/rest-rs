@@ -1,11 +1,11 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_web::{App, web, HttpServer, middleware, HttpResponse};
+use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 
-mod models;
-mod handler;
 mod db;
+mod handler;
+mod models;
 mod schema;
 
 #[actix_web::main]
@@ -20,10 +20,14 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .service(handler::user_get)
             .service(handler::user_add)
-            .route("/", web::get().to(|| HttpResponse::Ok().body("hello, world")))
+            .route(
+                "/",
+                web::get().to(|| HttpResponse::Ok().body("hello, world!")),
+            )
             .default_service(web::route().to(|| HttpResponse::NotFound().body("404")))
     })
-        .bind("0.0.0.0:8080")?
-        .run()
-        .await
+    .workers(10)
+    .bind("0.0.0.0:8080")?
+    .run()
+    .await
 }
