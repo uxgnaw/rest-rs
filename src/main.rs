@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_web::{App, HttpServer, middleware};
+use actix_web::{App, web, HttpServer, middleware, HttpResponse};
 
 mod models;
 mod handler;
@@ -14,18 +14,16 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     dotenv::dotenv().ok();
 
-    let bind = "127.0.0.1:8080";
-
-    println!("Starting server at: {}", &bind);
-
     // Start HTTP server
     HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
             .service(handler::user_get)
             .service(handler::user_add)
+            .route("/", web::get().to(|| HttpResponse::Ok().body("hello, world")))
+            .default_service(web::route().to(|| HttpResponse::NotFound().body("404")))
     })
-        .bind(&bind)?
+        .bind("0.0.0.0:8080")?
         .run()
         .await
 }
