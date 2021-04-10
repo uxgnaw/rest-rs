@@ -1,0 +1,21 @@
+[package]
+name = "rest"
+version = "0.1.0"
+authors = ["wangxu <wangxu1@oneniceapp.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "3"
+diesel = { version = "^1.1.0", features = ["mysql", "r2d2"] }
+dotenv = "0.15"
+env_logger = "0.8"
+failure = "0.1.8"
+futures = "0.3.1"
+r2d2 = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "0.8", features = ["serde", "v4"] }
+log = "0.4"
+lazy_static = "1.4.0"
