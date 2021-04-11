@@ -2,7 +2,7 @@
 extern crate diesel;
 
 use actix_web::{middleware, web, App, HttpResponse, HttpServer};
-use simplelog::{WriteLogger, LevelFilter, Config};
+use simplelog::{Config, LevelFilter, WriteLogger};
 use std::fs::File;
 
 mod db;
@@ -16,8 +16,12 @@ async fn main() -> std::io::Result<()> {
     // env_logger::init();
     dotenv::dotenv().ok();
 
-    WriteLogger::init(LevelFilter::Info, Config::default(),
-                                       File::create("info.log").unwrap()).unwrap();
+    WriteLogger::init(
+        LevelFilter::Info,
+        Config::default(),
+        File::create("info.log").unwrap(),
+    )
+    .unwrap();
 
     // Start HTTP server
     HttpServer::new(move || {
