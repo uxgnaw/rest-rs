@@ -1,6 +1,7 @@
 use actix_web::{get, web, Error, HttpResponse};
 use diesel::prelude::*;
 use uuid::Uuid;
+use log::info;
 
 use crate::db;
 use crate::models;
@@ -8,6 +9,8 @@ use crate::models;
 #[get("/add/user/{name}")]
 pub async fn add_user(name: web::Path<String>) -> Result<HttpResponse, Error> {
     // use web::block to offload blocking Diesel code without blocking server thread
+    info!("add one user {}", name);
+
     let user = web::block(move || insert_new_user(&name))
         .await
         .map_err(|e| {
