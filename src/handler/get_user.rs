@@ -13,7 +13,7 @@ pub async fn get_user(user_uid: web::Path<Uuid>) -> Result<HttpResponse, Error> 
     let user = web::block(move || find_user_by_uid(user_uid))
         .await
         .map_err(|e| {
-            eprintln!("{}", e);
+            eprintln!("{:?}", e);
             HttpResponse::InternalServerError().finish()
         })?;
 

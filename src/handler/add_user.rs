@@ -13,7 +13,7 @@ pub async fn add_user(name: web::Path<String>) -> Result<HttpResponse, Error> {
     let user = web::block(|| insert_new_user(nm))
         .await
         .map_err(|e| {
-            eprintln!("{}", e);
+            eprintln!("{:?}", e);
             HttpResponse::InternalServerError().finish()
         })?;
 
