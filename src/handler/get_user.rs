@@ -28,7 +28,7 @@ pub async fn get_user(user_uid: web::Path<Uuid>) -> Result<HttpResponse, Error> 
 fn find_user_by_uid<'a>(uid: Uuid) -> Result<Option<models::User>, diesel::result::Error> {
     use crate::schema::users::dsl::*;
 
-    let conn = db::POOL.clone().get().expect("can't ge db conn from pool");
+    let conn = db::get_conn().expect("can't ge db conn from pool");
 
     let user = users
         .filter(id.eq(uid.to_string()))

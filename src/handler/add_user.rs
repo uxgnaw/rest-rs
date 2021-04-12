@@ -28,10 +28,7 @@ fn insert_new_user(
     // to prevent import collisions and namespace pollution.
     use crate::schema::users::dsl::*;
 
-    let conn = db::POOL
-        .clone()
-        .get()
-        .expect("couldn't get db connection from pool");
+    let conn = db::get_conn().expect("couldn't get db connection from pool");
     let new_user = models::User {
         id: Uuid::new_v4().to_string(),
         name: nm,
